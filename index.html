@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحلة عبر معالم تاريخ البحرين</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for Celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bahrainRed: '#D71921',
+                        bahrainDarkRed: '#A01017',
+                        bahrainGold: '#F59E0B',
+                        bahrainLightGold: '#FEF3C7',
+                        sandBg: '#FDFBF7',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #fffdfa 0%, #fef2f2 100%);
+            touch-action: manipulation;
+        }
+
+        /* custom subtle animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .pulse-subtle {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(1.02); }
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(215, 25, 33, 0.1);
+        }
+
+        /* Pattern overlay */
+        .pattern-bg {
+            background-color: #fdfbf7;
+            background-image: radial-gradient(#d71921 0.75px, transparent 0.75px), radial-gradient(#d71921 0.75px, #fdfbf7 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0,15px 15px;
+            background-opacity: 0.05;
+        }
+
+        /* Option Button Styling */
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px -3px rgba(215, 25, 33, 0.2);
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-6 pattern-bg text-slate-800 font-cairo select-none">
+
+    <!-- Container Wrap -->
+    <div class="w-full max-w-2xl mx-auto relative">
+
+        <!-- ==================== 1. START SCREEN ==================== -->
+        <div id="startScreen" class="glass-card rounded-3xl p-6 sm:p-10 text-center shadow-2xl relative overflow-hidden transition-all duration-500">
+            <!-- Decorative Elements -->
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-red-100 rounded-full blur-2xl opacity-60"></div>
+            <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-amber-100 rounded-full blur-2xl opacity-60"></div>
+
+            <!-- Flag Icon Header -->
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-red-50 text-bahrainRed rounded-full mb-4 shadow-inner border border-red-100 animate-float">
+                <i class="fa-solid fa-landmark text-4xl"></i>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-bahrainRed mb-2 tracking-tight">
+                معالم البحرين التاريخية
+            </h1>
+            <p class="text-slate-600 text-sm sm:text-base font-semibold mb-6 max-w-md mx-auto">
+                رحلة استكشافية تفاعلية لطالبات المرحلة الثانوية للتعرف على الإرث التاريخي والحضاري العريق لمملكة البحرين 🇧🇭
+            </p>
+
+            <!-- Instructions Card -->
+            <div class="bg-gradient-to-r from-red-50 to-amber-50 rounded-2xl p-4 sm:p-5 text-right mb-8 border border-red-100/50 shadow-sm">
+                <h3 class="font-bold text-bahrainRed mb-2 flex items-center gap-2 text-base sm:text-lg">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i> تعليمات اللعبة:
+                </h3>
+                <ul class="text-xs sm:text-sm text-slate-700 space-y-2 list-disc list-inside leading-relaxed font-medium">
+                    <li>تتكون اللعبة من <strong>8 أسئلة ممتعة ومغذية معرفياً</strong>.</li>
+                    <li>لكل سؤال 4 خيارات وإجابة واحدة صحيحة.</li>
+                    <li>احصلي على <strong>10 درجات</strong> لكل إجابة صحيحة.</li>
+                    <li>اقرئي التغذية الراجعة بعناية للاستفادة العلمية.</li>
+                </ul>
+            </div>
+
+            <!-- Start Button -->
+            <button onclick="startGame()" class="w-full sm:w-3/4 py-4 px-8 bg-gradient-to-r from-bahrainRed to-red-600 text-white font-extrabold text-xl rounded-2xl shadow-lg hover:shadow-red-500/30 hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 mx-auto cursor-pointer">
+                <span>ابدأي الرحلة الآن</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+
+        <!-- ==================== 2. GAME SCREEN ==================== -->
+        <div id="gameScreen" class="hidden glass-card rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden transition-all duration-500">
+            
+            <!-- Top Status Bar -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200/80">
+                <!-- Question Progress Badge -->
+                <div class="flex items-center gap-2 bg-red-50 text-bahrainRed px-3.5 py-1.5 rounded-full font-bold text-sm sm:text-base border border-red-100">
+                    <i class="fa-solid fa-layer-group text-xs sm:text-sm"></i>
+                    <span>السؤال:</span>
+                    <span id="currentQuestionNum" class="text-lg">1</span>
+                    <span class="text-xs opacity-70">/</span>
+                    <span id="totalQuestionsNum" class="text-xs opacity-70">8</span>
+                </div>
+
+                <!-- Score Counter Badge -->
+                <div class="flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full font-extrabold text-sm sm:text-base border border-amber-200 shadow-sm">
+                    <i class="fa-solid fa-star text-amber-500 text-lg"></i>
+                    <span>النقاط:</span>
+                    <span id="scoreDisplay" class="text-lg text-amber-800">0</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 h-2.5 rounded-full mb-6 overflow-hidden p-0.5 border border-slate-200/50">
+                <div id="progressBar" class="bg-gradient-to-r from-amber-400 to-bahrainRed h-full rounded-full transition-all duration-500 w-0"></div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-6 bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <span id="landmarkTag" class="inline-block bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-md mb-2">
+                    معلم تاريخي
+                </span>
+                <h2 id="questionText" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+                    جارٍ تحميل السؤال...
+                </h2>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="optionsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
+                <!-- Options injected via JavaScript -->
+            </div>
+
+            <!-- Feedback Modal / Box -->
+            <div id="feedbackContainer" class="hidden mb-6 p-4 rounded-2xl border transition-all duration-300">
+                <div class="flex items-start gap-3">
+                    <div id="feedbackIcon" class="text-2xl mt-0.5"></div>
+                    <div class="flex-1">
+                        <h4 id="feedbackTitle" class="font-extrabold text-base mb-1"></h4>
+                        <p id="feedbackText" class="text-xs sm:text-sm leading-relaxed font-medium text-slate-700"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Question Button -->
+            <button id="nextBtn" onclick="nextQuestion()" class="hidden w-full py-3.5 px-6 bg-slate-800 hover:bg-slate-900 text-white font-bold text-base rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer">
+                <span>السؤال التالي</span>
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+        </div>
+
+        <!-- ==================== 3. RESULT SCREEN ==================== -->
+        <div id="resultScreen" class="hidden glass-card rounded-3xl p-6 sm:p-10 text-center shadow-2xl relative overflow-hidden transition-all duration-500">
+            <!-- Icon Result -->
+            <div id="resultIconContainer" class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4 shadow-lg animate-bounce">
+                <i id="resultIcon" class="fa-solid fa-trophy text-5xl"></i>
+            </div>
+
+            <h2 id="resultTitle" class="text-2xl sm:text-3xl font-extrabold mb-2">
+                نتيجة رائعة!
+            </h2>
+            <p id="resultSubtitle" class="text-slate-600 text-sm sm:text-base font-semibold mb-6">
+                لقد أتممتِ جميع الأسئلة الخاصة بـمعالم تاريخ مملكة البحرين.
+            </p>
+
+            <!-- Score Summary Card -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-md mb-8 max-w-sm mx-auto">
+                <div class="text-slate-500 font-bold text-sm mb-1">النتيجة النهائية</div>
+                <div class="flex items-center justify-center gap-2">
+                    <span id="finalScore" class="text-4xl sm:text-5xl font-black text-bahrainRed">0</span>
+                    <span class="text-slate-400 font-bold text-xl">/ <span id="maxScore">80</span></span>
+                </div>
+                <div id="gradeBadge" class="inline-block mt-3 px-4 py-1 rounded-full text-xs font-black">
+                    ممتاز
+                </div>
+            </div>
+
+            <!-- Restart Button -->
+            <button onclick="restartGame()" class="w-full sm:w-3/4 py-4 px-8 bg-gradient-to-r from-bahrainRed to-red-600 text-white font-extrabold text-lg rounded-2xl shadow-lg hover:shadow-red-500/30 hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 mx-auto cursor-pointer">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>إعادة اللعب والتعلم</span>
+            </button>
+        </div>
+
+        <!-- Footer Footer text -->
+        <footer class="mt-6 text-center text-xs font-bold text-slate-500">
+            مملكة البحرين &bull; قسم المواد الاجتماعيات والتاريخ &bull; مرحلة الثانوية
+        </footer>
+    </div>
+
+    <!-- Web Audio Synthesis Effects -->
+    <script>
+        // Simple Audio Synthesizer using Web Audio API (No external sound files required)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                if (!audioCtx) return;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    // Happy High Chime
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'wrong') {
+                    // Low error buzz
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now); // A3
+                    osc.frequency.linearRampToValueAtTime(130.81, now + 0.25); // C3
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'win') {
+                    // Fanfare sound
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.15);
+                    osc.frequency.setValueAtTime(659.25, now + 0.3);
+                    osc.frequency.setValueAtTime(880, now + 0.45);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+                    osc.start(now);
+                    osc.stop(now + 0.8);
+                }
+            } catch (e) {
+                console.log("Audio not supported or restricted");
+            }
+        }
+    </script>
+
+    <!-- Game Logic JavaScript -->
+    <script>
+        // Quiz Data - Historical Landmarks of Kingdom of Bahrain
+        const questionsData = [
+            {
+                tag: "آثار وتراث عالمي",
+                question: "تُعد من أكبر القلاع التاريخية في البحرين والمسجلة على قائمة التراث العالمي لليونسكو وكانت عاصمة حضارة دلمون:",
+                options: [
+                    "قلعة البحرين (قلعة البرتغال)",
+                    "قلعة الرفاع",
+                    "قلعة عراد",
+                    "قلعة بو ماهر"
+                ],
+                correct: 0,
+                info: "تعتبر قلعة البحرين الموقع الرئيسي لحضارة دلمون القديمة، وهي مدرجة ضمن قائمة التراث العالمي لليونسكو منذ عام 2005."
+            },
+            {
+                tag: "العمارة والدفاع",
+                question: "قلعة تاريخية مربعة الشكل تقع في المحرق وتعود للقرن الخامس عشر الميلادي وتتميز بأبراجها الدائرية الأربعة:",
+                options: [
+                    "قلعة الشيخ سلمان بن أحمد",
+                    "قلعة عراد",
+                    "قلعة البحرين",
+                    "قلعة الفتح"
+                ],
+                correct: 1,
+                info: "قلعة عراد شُيّدت في القرن 15 وتطل على الممرات البحرية المحيطة بجزيرة المحرق وتعتبر حصناً دفاعياً إسلامياً."
+            },
+            {
+                tag: "حضارة دلمون",
+                question: "موقع أثري يضم معابد تعود لـ 2500 قبل الميلاد مخصصة لإله المياه العذبة والنماء (إنكي):",
+                options: [
+                    "موقع سار الأثري",
+                    "مدافن عالي",
+                    "معبد باربار",
+                    "عين عذاري"
+                ],
+                correct: 2,
+                info: "معبد باربار من أهم الشواهد المعمارية لحضارة دلمون، واكتُشف فيه العديد من القطع والأدوات النحاسية والدينية."
+            },
+            {
+                tag: "تاريخ الحكم والأسرة الحاكمة",
+                question: "قلعة تاريخية في منطقة الرفاع تُعرف أيضاً باسم قلعة 'الشيخ سلمان بن أحمد الفاتح':",
+                options: [
+                    "قلعة عراد",
+                    "قلعة الرفاع",
+                    "قلعة الديوان",
+                    "قلعة الصخير"
+                ],
+                correct: 1,
+                info: "قلعة الرفاع بنيت عام 1812م في عهد الشيخ سلمان بن أحمد الفاتح وكانت مقراً للحكم وموقعاً استراتيجياً مطلاً على وادي حنين."
+            },
+            {
+                tag: "تراث صيد اللؤلؤ",
+                question: "مسار تراثي مدرج على قائمة اليونسكو يقع في المحرق ويجسد اقتصاد اللؤلؤ التاريخي للبحرين:",
+                options: [
+                    "طريق اللؤلؤ",
+                    "سوق المنامة القديم",
+                    "حي الجسرة",
+                    "ممر الفاتح"
+                ],
+                correct: 0,
+                info: "طريق اللؤلؤ في المحرق يمتد لمسافة 3.5 كم ويوثق عصر صناعة اللؤلؤ التي شكلت الهوية الاقتصادية للبحرين لقرون."
+            },
+            {
+                tag: "أكبر التلال الأثرية",
+                question: "موقع تاريخي فريد يضم أكبر تجمع للتلال الأثرية القديمة في العالم ويُظهر طقوس الدفن الدلمونية:",
+                options: [
+                    "تلال مدافن عالي",
+                    "مقابر بني جمرة",
+                    "مدافن المحرق",
+                    "تلال كرباباد"
+                ],
+                correct: 0,
+                info: "مدافن عالي تعود للحقبة الدلمونية وتعد من أضخم وأعرق المقابر التاريخية في العالم القديم."
+            },
+            {
+                tag: "تاريخ التجارة والانفتاح",
+                question: "مبنى تاريخي تم تشييده عام 1949م ليكون المقر الرئيسي للمجلس الجمركي وكان بوابة البحرين البحرية:",
+                options: [
+                    "بيت الشيخ عيسى بن علي",
+                    "باب البحرين",
+                    "مبنى الجسرة",
+                    "قصر القضيبية"
+                ],
+                correct: 1,
+                info: "باب البحرين يقع في مدخل سوق المنامة، وصممه السير تشارلز بلغريف عام 1949م ليغدو واجهة المنامة التجارية."
+            },
+            {
+                tag: "تاريخ العمارة البحرينية",
+                question: "منزل تاريخي في المحرق يتميز بالعمارة الإسلامية وتصميم البادجير (ملاقف الهواء) يعود للقرن 19:",
+                options: [
+                    "بيت سيادي",
+                    "بيت الشيخ عيسى بن علي آل خليفة",
+                    "بيت خلف",
+                    "بيت فخرو"
+                ],
+                correct: 1,
+                info: "بيت الشيخ عيسى بن علي آل خليفة في المحرق هو نموذج رائع للعمارة التقليدية الخليجية ونظام التبريد الطبيعي عبر الملاقف."
+            }
+        ];
+
+        // State Variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        // DOM Elements
+        const startScreen = document.getElementById('startScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const resultScreen = document.getElementById('resultScreen');
+
+        const currentQuestionNumEl = document.getElementById('currentQuestionNum');
+        const totalQuestionsNumEl = document.getElementById('totalQuestionsNum');
+        const scoreDisplayEl = document.getElementById('scoreDisplay');
+        const progressBarEl = document.getElementById('progressBar');
+
+        const landmarkTagEl = document.getElementById('landmarkTag');
+        const questionTextEl = document.getElementById('questionText');
+        const optionsContainerEl = document.getElementById('optionsContainer');
+
+        const feedbackContainerEl = document.getElementById('feedbackContainer');
+        const feedbackIconEl = document.getElementById('feedbackIcon');
+        const feedbackTitleEl = document.getElementById('feedbackTitle');
+        const feedbackTextEl = document.getElementById('feedbackText');
+        const nextBtnEl = document.getElementById('nextBtn');
+
+        const finalScoreEl = document.getElementById('finalScore');
+        const maxScoreEl = document.getElementById('maxScore');
+        const gradeBadgeEl = document.getElementById('gradeBadge');
+        const resultTitleEl = document.getElementById('resultTitle');
+        const resultSubtitleEl = document.getElementById('resultSubtitle');
+        const resultIconEl = document.getElementById('resultIcon');
+        const resultIconContainerEl = document.getElementById('resultIconContainer');
+
+        // Start Game
+        function startGame() {
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+
+            currentQuestionIndex = 0;
+            score = 0;
+            totalQuestionsNumEl.textContent = questionsData.length;
+            maxScoreEl.textContent = questionsData.length * 10;
+            
+            updateScoreDisplay();
+            loadQuestion();
+        }
+
+        // Update Score Display
+        function updateScoreDisplay() {
+            scoreDisplayEl.textContent = score;
+        }
+
+        // Load Single Question
+        function loadQuestion() {
+            answered = false;
+            const q = questionsData[currentQuestionIndex];
+
+            // Update Progress Header
+            currentQuestionNumEl.textContent = currentQuestionIndex + 1;
+            const progressPercent = ((currentQuestionIndex) / questionsData.length) * 100;
+            progressBarEl.style.width = `${progressPercent}%`;
+
+            // Hide feedback & next button
+            feedbackContainerEl.classList.add('hidden');
+            nextBtnEl.classList.add('hidden');
+
+            // Set Content
+            landmarkTagEl.textContent = q.tag;
+            questionTextEl.textContent = q.question;
+
+            // Render Options
+            optionsContainerEl.innerHTML = '';
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full p-4 rounded-xl border-2 border-slate-200 bg-white hover:border-bahrainRed/50 hover:bg-red-50/40 text-slate-700 font-bold text-sm sm:text-base text-right flex items-center justify-between transition-all cursor-pointer`;
+                btn.innerHTML = `
+                    <span class="flex-1">${optText}</span>
+                    <span class="w-7 h-7 rounded-full bg-slate-100 border border-slate-300 text-slate-500 font-bold text-xs flex items-center justify-center shrink-0 mr-2">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                `;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainerEl.appendChild(btn);
+            });
+        }
+
+        // Check Selected Answer
+        function checkAnswer(selectedIndex, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const q = questionsData[currentQuestionIndex];
+            const buttons = optionsContainerEl.querySelectorAll('button');
+
+            // Disable all option buttons
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-bahrainRed/50', 'hover:bg-red-50/40');
+            });
+
+            if (selectedIndex === q.correct) {
+                // Correct Answer
+                score += 10;
+                updateScoreDisplay();
+                playSound('correct');
+
+                selectedBtn.classList.remove('border-slate-200', 'bg-white');
+                selectedBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+                
+                // Add checkmark icon to button
+                const badge = selectedBtn.querySelector('span:last-child');
+                badge.className = "w-7 h-7 rounded-full bg-emerald-500 text-white font-bold text-xs flex items-center justify-center shrink-0 mr-2";
+                badge.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+                // Show Feedback
+                feedbackContainerEl.className = "mb-6 p-4 rounded-2xl border bg-emerald-50 border-emerald-200 text-emerald-900 animate-fade-in";
+                feedbackIconEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
+                feedbackTitleEl.textContent = "إجابة صحيحة! أحسنتِ 🌟";
+                feedbackTextEl.textContent = q.info;
+            } else {
+                // Wrong Answer
+                playSound('wrong');
+
+                selectedBtn.classList.remove('border-slate-200', 'bg-white');
+                selectedBtn.classList.add('border-rose-400', 'bg-rose-50', 'text-rose-800');
+                
+                // Add cross icon to selected wrong button
+                const badge = selectedBtn.querySelector('span:last-child');
+                badge.className = "w-7 h-7 rounded-full bg-rose-500 text-white font-bold text-xs flex items-center justify-center shrink-0 mr-2";
+                badge.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+                // Highlight Correct Option
+                const correctBtn = buttons[q.correct];
+                correctBtn.classList.remove('border-slate-200', 'bg-white');
+                correctBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+                const correctBadge = correctBtn.querySelector('span:last-child');
+                correctBadge.className = "w-7 h-7 rounded-full bg-emerald-500 text-white font-bold text-xs flex items-center justify-center shrink-0 mr-2";
+                correctBadge.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+                // Show Feedback
+                feedbackContainerEl.className = "mb-6 p-4 rounded-2xl border bg-rose-50 border-rose-200 text-rose-900 animate-fade-in";
+                feedbackIconEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-600"></i>';
+                feedbackTitleEl.textContent = "إجابة خاطئة! التغذية الراجعة:";
+                feedbackTextEl.textContent = `${q.info}`;
+            }
+
+            // Reveal feedback & Next button
+            feedbackContainerEl.classList.remove('hidden');
+            nextBtnEl.classList.remove('hidden');
+
+            // Scroll feedback into view smoothly on smaller screens
+            if (window.innerWidth < 640) {
+                feedbackContainerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Handle Next Question Click
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questionsData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Trigger End Game Celebration Confetti
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // Show Final Result Screen
+        function showResults() {
+            gameScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            // Update Progress to 100%
+            progressBarEl.style.width = '100%';
+
+            finalScoreEl.textContent = score;
+            const maxScore = questionsData.length * 10;
+            const percentage = (score / maxScore) * 100;
+
+            if (percentage >= 80) {
+                playSound('win');
+                triggerConfetti();
+                resultIconContainerEl.className = "inline-flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-amber-100 text-amber-600 border-2 border-amber-300 shadow-lg animate-bounce";
+                resultIconEl.className = "fa-solid fa-trophy text-5xl";
+                resultTitleEl.textContent = "متازة! بطلة التاريخ 🏆";
+                resultSubtitle.textContent = "لديكِ معرفة استثنائية وعميقة بتاريخ وتراث مملكة البحرين المجيد!";
+                gradeBadgeEl.className = "inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-200";
+                gradeBadgeEl.textContent = "مستوى ممتاز جدًا 🌟";
+            } else if (percentage >= 50) {
+                playSound('correct');
+                resultIconContainerEl.className = "inline-flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-blue-100 text-blue-600 border-2 border-blue-300 shadow-md";
+                resultIconEl.className = "fa-solid fa-award text-5xl";
+                resultTitleEl.textContent = "نتيجة جيدة جداً! 👏";
+                resultSubtitle.textContent = "أداء رائع، ويمكنكِ دائماً اكتشاف المزيد عن معالم وطنا الغالي.";
+                gradeBadgeEl.className = "inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-black bg-blue-100 text-blue-800 border border-blue-200";
+                gradeBadgeEl.textContent = "مستوى جيد جداً 👍";
+            } else {
+                resultIconContainerEl.className = "inline-flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-rose-100 text-rose-600 border-2 border-rose-300 shadow-md";
+                resultIconEl.className = "fa-solid fa-book-open text-5xl";
+                resultTitleEl.textContent = "محاولة طيبة! 📚";
+                resultSubtitle.textContent = "معالم البحرين زاخرة بالقصص الشيقة، جربي اللعب مرة أخرى لتعزيز معرفتكِ!";
+                gradeBadgeEl.className = "inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-200";
+                gradeBadgeEl.textContent = "يحتاج لإعادة المحاولة 💪";
+            }
+        }
+
+        // Restart Game Action
+        function restartGame() {
+            resultScreen.classList.add('hidden');
+            startGame();
+        }
+    </script>
+</body>
+</html>
